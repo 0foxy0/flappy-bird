@@ -25,6 +25,20 @@ public class GamePanel extends JPanel {
         for (Pipes pipes : pipesList) {
             pipes.draw(g);
         }
+
+        drawScore(g);
+    }
+
+    private void drawScore(Graphics g) {
+        String scoreText = "Score: " + Game.getScore();
+
+        Font font = new Font("Verdana", Font.BOLD, 24);
+        g.setFont(font);
+
+        FontMetrics metrics = g.getFontMetrics();
+        int x = Game.getWindowWidth() /2 - metrics.stringWidth(scoreText) / 2;
+
+        g.drawString(scoreText, x, metrics.getHeight());
     }
 
     public static BufferedImage rotateImage(BufferedImage bufferedImage, Double angle) {

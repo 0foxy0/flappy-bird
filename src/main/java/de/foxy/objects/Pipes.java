@@ -16,6 +16,7 @@ public class Pipes {
     private int x;
     private final Pipe lowerPipe, upperPipe;
     private final Image image;
+    private Boolean gaped = false;
 
     public Pipes(int gap) throws URISyntaxException, IOException {
         URL imageUrl = getClass().getResource("/pipe.png");
@@ -44,6 +45,10 @@ public class Pipes {
         Bird bird = Game.getBird();
         if (bird.collides(this) && !bird.isDead()) {
             bird.dies();
+        }
+        if (x + getWidth() < bird.getX() && !gaped) {
+            gaped = true;
+            Game.increaseScore();
         }
     }
 

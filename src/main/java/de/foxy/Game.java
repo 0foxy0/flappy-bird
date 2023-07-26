@@ -28,6 +28,7 @@ public class Game extends JFrame {
     private int frameCounter = 0;
     private final int FPS = 60;
     private TimerTask interval;
+    private static int score;
 
     public Game() throws IOException, URISyntaxException {
         URL iconUrl = getClass().getResource("/icon.png");
@@ -113,5 +114,13 @@ public class Game extends JFrame {
 
     public static GamePanel getGamePanel() {
         return gamePanel;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static void increaseScore() {
+        score++;
     }
 }

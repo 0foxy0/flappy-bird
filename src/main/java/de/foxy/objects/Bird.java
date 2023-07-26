@@ -70,4 +70,6 @@ public class Bird {
     public void dies() {
         dead = true;
     }
+
+    public int getX() { return x; }
 }
