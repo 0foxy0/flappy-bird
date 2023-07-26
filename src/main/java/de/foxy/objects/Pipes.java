@@ -13,8 +13,8 @@ import java.net.URL;
 import java.util.Random;
 
 public class Pipes {
-    private int x, lowerPipeY, upperPipeY;
-    private final int gap;
+    private int x;
+    private final Pipe lowerPipe, upperPipe;
     private final Image image;
 
     public Pipes(int gap) throws URISyntaxException, IOException {
@@ -26,11 +26,20 @@ public class Pipes {
         image = ImageIO.read(imageFile);
 
         x = Game.getWindowWidth();
-        this.gap = gap;
+
+        int minPipeHeight = 100;
+        int lowestY = gap + minPipeHeight;
+        int lowerPipeY = new Random().nextInt(Game.getWindowHeight() - minPipeHeight - lowestY) + lowestY;
+
+        Image upperPipeImg = GamePanel.rotateImage((BufferedImage) image, 180.00);
+        int upperPipeY = lowerPipeY - gap - image.getHeight(Game.getGamePanel());
+
+        lowerPipe = new Pipe(x, lowerPipeY, image);
+        upperPipe = new Pipe(x, upperPipeY, upperPipeImg);
     }
 
     public void update() {
-        x -= 1;
+        move();
 
         Bird bird = Game.getBird();
         if (bird.collides(this) && !bird.isDead()) {
@@ -39,33 +48,35 @@ public class Pipes {
     }
 
     public void draw(Graphics g) {
-        lowerPipeY = Game.getWindowHeight() - 200;
-        upperPipeY = lowerPipeY - gap - image.getHeight(Game.getGamePanel());
-
-        g.drawImage(image, x, lowerPipeY, Game.getGamePanel());
-
-        BufferedImage upperPipe = GamePanel.rotate((BufferedImage) image, 180.00);
-        g.drawImage(upperPipe, x, upperPipeY, Game.getGamePanel());
+        lowerPipe.draw(g);
+        upperPipe.draw(g);
     }
 
     public static int getRandomGap() {
-        return new Random().nextInt(200) + 50;
+        int tiniestGap = 100;
+        return new Random().nextInt(200 - tiniestGap) + tiniestGap;
     }
 
     public Boolean isOutOfWindow() {
         return x < -image.getWidth(Game.getGamePanel());
     }
 
+    private void move() {
+        x -= 1;
+        lowerPipe.setX(x);
+        upperPipe.setX(x);
+    }
+
     public int getX() {
         return x;
     }
 
-    public int getLowerPipeY() {
-        return lowerPipeY;
+    public Pipe getLowerPipe() {
+        return lowerPipe;
     }
 
-    public int getUpperPipeY() {
-        return upperPipeY;
+    public Pipe getUpperPipe() {
+        return upperPipe;
     }
 
     public int getWidth() {

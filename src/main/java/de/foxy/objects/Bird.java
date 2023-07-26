@@ -57,8 +57,8 @@ public class Bird {
 
     public Boolean collides(Pipes pipes) {
         Boolean xCollides = x + width > pipes.getX() && x < pipes.getX() + pipes.getWidth();
-        Boolean yCollides = (y + height > pipes.getUpperPipeY() && y < pipes.getUpperPipeY() + pipes.getHeight())
-                || (y + height > pipes.getLowerPipeY() && y < pipes.getLowerPipeY() + pipes.getHeight());
+        Boolean yCollides = (y + height > pipes.getUpperPipe().getY() && y < pipes.getUpperPipe().getY() + pipes.getHeight())
+                || (y + height > pipes.getLowerPipe().getY() && y < pipes.getLowerPipe().getY() + pipes.getHeight());
 
         return xCollides && yCollides;
     }

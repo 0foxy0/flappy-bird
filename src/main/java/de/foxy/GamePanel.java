@@ -27,21 +27,21 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public static BufferedImage rotate(BufferedImage bufferedImage, Double angle) {
+    public static BufferedImage rotateImage(BufferedImage bufferedImage, Double angle) {
         double sin = Math.abs(Math.sin(Math.toRadians(angle))),
                 cos = Math.abs(Math.cos(Math.toRadians(angle)));
 
-        int w = bufferedImage.getWidth();
-        int h = bufferedImage.getHeight();
+        int width = bufferedImage.getWidth();
+        int height = bufferedImage.getHeight();
 
-        int newWidth = (int) Math.floor(w*cos + h*sin),
-                newHeight = (int) Math.floor(h*cos + w*sin);
+        int newWidth = (int) Math.floor(width * cos + height * sin),
+                newHeight = (int) Math.floor(height * cos + width * sin);
 
         BufferedImage rotated = new BufferedImage(newWidth, newHeight, bufferedImage.getType());
 
         Graphics2D graphic = rotated.createGraphics();
-        graphic.translate((newWidth-w)/2, (newHeight-h)/2);
-        graphic.rotate(Math.toRadians(angle), (double) w /2, (double) h /2);
+        graphic.translate((newWidth - width) /2, (newHeight - height) /2);
+        graphic.rotate(Math.toRadians(angle), (double) width /2, (double) height /2);
         graphic.drawRenderedImage(bufferedImage, null);
         graphic.dispose();
 
