@@ -11,9 +11,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public class Bird {
-    private int y, velocity = 0;
+    private double y, velocity = 0;
     private final int x, width, height, bottom;
-    private final int gravity = 1;
+    private final double gravity = 0.6;
     private final Image image;
     private Boolean dead = false;
 
@@ -36,8 +36,10 @@ public class Bird {
     public void update() {
         velocity += gravity;
         y += velocity;
+        velocity *= 0.9;
 
         if (y > bottom) {
+            dies();
             y = bottom;
             velocity = 0;
         }
@@ -52,7 +54,7 @@ public class Bird {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(image, x, y, Game.getGamePanel());
+        g.drawImage(image, x, (int) y, Game.getGamePanel());
     }
 
     public Boolean collides(Pipes pipes) {
