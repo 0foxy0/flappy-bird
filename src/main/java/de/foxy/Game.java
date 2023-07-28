@@ -157,11 +157,11 @@ public class Game extends JFrame implements MouseController {
     public static void increaseScore() {
         score++;
         if (score % 3 == 0) {
-            makeGameFasterAndHarder();
+            increaseDifficulty();
         }
     }
 
-    private static void makeGameFasterAndHarder() {
+    private static void increaseDifficulty() {
         if (pipesSpawnRate == 1) {
             return;
         }
