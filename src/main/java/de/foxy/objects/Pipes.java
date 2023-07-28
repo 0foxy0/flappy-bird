@@ -17,6 +17,7 @@ public class Pipes {
     private int x;
     private final Pipe lowerPipe, upperPipe;
     private final Image image;
+    private static int speed = 1;
     private Boolean gaped = false;
 
     public Pipes(int gap) throws URISyntaxException, IOException {
@@ -68,8 +69,7 @@ public class Pipes {
     }
 
     private void move() {
-        //TODO: make them faster as the game progresses
-        x -= 1;
+        x -= speed;
         lowerPipe.setX(x);
         upperPipe.setX(x);
     }
@@ -92,5 +92,17 @@ public class Pipes {
 
     public int getHeight() {
         return image.getHeight(Game.getGamePanel());
+    }
+
+    public static void increaseSpeed() {
+        speed += 1;
+    }
+
+    public static int getSpeed() {
+        return speed;
+    }
+
+    public static void resetSpeed() {
+        speed = 1;
     }
 }

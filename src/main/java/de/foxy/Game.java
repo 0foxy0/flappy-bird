@@ -2,7 +2,7 @@ package de.foxy;
 
 import de.foxy.controller.KeyController;
 import de.foxy.controller.MouseController;
-import de.foxy.enums.GameStatus;
+import de.foxy.enums.GameState;
 import de.foxy.objects.Bird;
 import de.foxy.objects.Pipes;
 import de.foxy.objects.util.Rectangle;
@@ -29,10 +29,11 @@ public class Game extends JFrame implements MouseController {
     private final static int windowWidth = 720, windowHeight = 720;
     private static final ArrayList<Pipes> pipesList = new ArrayList<>();
     private static int frameCounter = 0;
-    private final int FPS = 60;
+    private static final int FPS = 60;
+    private static int pipesSpawnRate = 10;
     private TimerTask interval;
     private static int score;
-    private static GameStatus status = GameStatus.START_MENU;
+    private static GameState state = GameState.START_MENU;
     public static final String title = "Flappy Bird";
 
     public Game() throws IOException, URISyntaxException {
@@ -68,7 +69,7 @@ public class Game extends JFrame implements MouseController {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (status == GameStatus.IN_GAME) {
+        if (state == GameState.IN_GAME) {
             return;
         }
         Rectangle playButton = GamePanel.getPlayButton();
@@ -85,14 +86,13 @@ public class Game extends JFrame implements MouseController {
     private void gameLoop() throws URISyntaxException, IOException {
         if (bird.isDead()) {
             interval.cancel();
-            status = GameStatus.DEATH_MENU;
+            state = GameState.DEATH_MENU;
         }
 
         bird.update();
         pipesList.forEach(Pipes::update);
 
-        //every 10 seconds a new pipe pair spawns
-        if (frameCounter % (10 * FPS) == 0) {
+        if (frameCounter % (pipesSpawnRate * FPS) == 0) {
             int randomGap = Pipes.getRandomGap();
             pipesList.add(new Pipes(randomGap));
             frameCounter = 0;
@@ -101,7 +101,7 @@ public class Game extends JFrame implements MouseController {
     }
 
     public void start() throws URISyntaxException, IOException {
-        status = GameStatus.IN_GAME;
+        state = GameState.IN_GAME;
 
         int birdWidth = 70, birdHeight = 50;
         bird = new Bird((getWidth() / 2) - (birdWidth / 2), getHeight() /2 - birdHeight /2, birdWidth, birdHeight);
@@ -125,6 +125,8 @@ public class Game extends JFrame implements MouseController {
         bird = null;
         pipesList.clear();
         frameCounter = 0;
+        pipesSpawnRate = 10;
+        Pipes.resetSpeed();
         score = 0;
     }
 
@@ -154,9 +156,31 @@ public class Game extends JFrame implements MouseController {
 
     public static void increaseScore() {
         score++;
+        if (score % 3 == 0) {
+            makeGameFasterAndHarder();
+        }
     }
 
-    public static GameStatus getStatus() {
-        return status;
+    private static void makeGameFasterAndHarder() {
+        if (pipesSpawnRate == 1) {
+            return;
+        }
+        Pipes.increaseSpeed();
+        int pipesSpeed = Pipes.getSpeed();
+
+        int distance = getWindowWidth() + pipesList.get(0).getWidth();
+        int timeToOvercomeDistance = distance / pipesSpeed;
+        int screenTimeInSeconds = timeToOvercomeDistance / FPS;
+        if (screenTimeInSeconds < 1) {
+            pipesSpawnRate = 1;
+            return;
+        }
+
+        //increase pipesSpawnRate
+        pipesSpawnRate = screenTimeInSeconds;
+    }
+
+    public static GameState getGameState() {
+        return state;
     }
 }

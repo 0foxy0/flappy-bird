@@ -16,7 +16,7 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        switch (Game.getStatus()) {
+        switch (Game.getGameState()) {
             case IN_GAME -> renderGame(g);
             case DEATH_MENU -> renderDeathMenu(g);
             default -> renderStartMenu(g);
