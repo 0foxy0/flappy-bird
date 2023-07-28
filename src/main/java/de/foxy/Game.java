@@ -1,12 +1,16 @@
 package de.foxy;
 
-import de.foxy.controller.KeyListener;
+import de.foxy.controller.KeyController;
+import de.foxy.controller.MouseController;
+import de.foxy.enums.GameStatus;
 import de.foxy.objects.Bird;
 import de.foxy.objects.Pipes;
+import de.foxy.objects.util.Rectangle;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,20 +19,21 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Game extends JFrame {
+public class Game extends JFrame implements MouseController {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        Game game = new Game();
-        game.start();
+        new Game();
     }
 
     private static GamePanel gamePanel;
     private static Bird bird;
     private final static int windowWidth = 720, windowHeight = 720;
     private static final ArrayList<Pipes> pipesList = new ArrayList<>();
-    private int frameCounter = 0;
+    private static int frameCounter = 0;
     private final int FPS = 60;
     private TimerTask interval;
     private static int score;
+    private static GameStatus status = GameStatus.START_MENU;
+    public static final String title = "Flappy Bird";
 
     public Game() throws IOException, URISyntaxException {
         URL iconUrl = getClass().getResource("/icon.png");
@@ -39,7 +44,7 @@ public class Game extends JFrame {
         Image image = ImageIO.read(imageFile);
 
 
-        setTitle("Flappy Bird");
+        setTitle(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(windowWidth, windowHeight);
@@ -53,19 +58,34 @@ public class Game extends JFrame {
 
         gamePanel = new GamePanel();
 
-        int birdWidth = 70, birdHeight = 50;
-        bird = new Bird((getWidth() / 2) - (birdWidth / 2), (getHeight() / 2) - (birdHeight / 2), birdWidth, birdHeight);
-
         setContentPane(gamePanel);
-        addKeyListener(new KeyListener());
+        addMouseListener(this);
+        addKeyListener(new KeyController());
 
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (status == GameStatus.IN_GAME) {
+            return;
+        }
+        Rectangle playButton = GamePanel.getPlayButton();
+
+        if (playButton.contains(e.getPoint())) {
+            try {
+                start();
+            } catch (URISyntaxException | IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
     private void gameLoop() throws URISyntaxException, IOException {
         if (bird.isDead()) {
             interval.cancel();
+            status = GameStatus.DEATH_MENU;
         }
 
         bird.update();
@@ -80,7 +100,12 @@ public class Game extends JFrame {
         frameCounter++;
     }
 
-    public void start() {
+    public void start() throws URISyntaxException, IOException {
+        status = GameStatus.IN_GAME;
+
+        int birdWidth = 70, birdHeight = 50;
+        bird = new Bird((getWidth() / 2) - (birdWidth / 2), getHeight() /2 - birdHeight /2, birdWidth, birdHeight);
+
         interval = new TimerTask() {
             @Override
             public void run(){
@@ -93,7 +118,14 @@ public class Game extends JFrame {
             }
         };
 
-        new Timer().scheduleAtFixedRate(interval,0,1000 / FPS);
+        new Timer().scheduleAtFixedRate(interval, 0, 1000 / FPS);
+    }
+
+    public static void reset() {
+        bird = null;
+        pipesList.clear();
+        frameCounter = 0;
+        score = 0;
     }
 
     public static Bird getBird() {
@@ -122,5 +154,9 @@ public class Game extends JFrame {
 
     public static void increaseScore() {
         score++;
+    }
+
+    public static GameStatus getStatus() {
+        return status;
     }
 }

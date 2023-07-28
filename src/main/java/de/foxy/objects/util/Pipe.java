@@ -1,4 +1,4 @@
-package de.foxy.objects;
+package de.foxy.objects.util;
 
 import de.foxy.Game;
 

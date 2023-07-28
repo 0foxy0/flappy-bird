@@ -1,13 +1,14 @@
 package de.foxy.controller;
 
 import de.foxy.Game;
+import de.foxy.enums.GameStatus;
 
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
-public class KeyListener implements java.awt.event.KeyListener {
+public class KeyController implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() != 32) {
+        if (e.getKeyCode() != 32 || Game.getStatus() != GameStatus.IN_GAME) {
             return;
         }
         Game.getBird().up();

@@ -2,6 +2,7 @@ package de.foxy.objects;
 
 import de.foxy.Game;
 import de.foxy.GamePanel;
+import de.foxy.objects.util.Pipe;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -67,6 +68,7 @@ public class Pipes {
     }
 
     private void move() {
+        //TODO: make them faster as the game progresses
         x -= 1;
         lowerPipe.setX(x);
         upperPipe.setX(x);
