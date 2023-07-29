@@ -53,40 +53,43 @@ public class GamePanel extends JPanel {
     }
 
     private void drawScore(Graphics g) {
+        g.setColor(Color.BLACK);
+
         String scoreText = "Score: " + Game.getScore();
 
         Font font = new Font("Arial", Font.BOLD, 24);
         g.setFont(font);
 
-        FontMetrics metrics = g.getFontMetrics();
+        FontMetrics metrics = g.getFontMetrics(font);
         int x = Game.getWindowWidth() /2 - metrics.stringWidth(scoreText) / 2;
 
         g.drawString(scoreText, x, metrics.getHeight());
     }
 
     private void drawTitle(Graphics g, String title, int fontSize) {
+        g.setColor(Color.BLACK);
+
         Font font = new Font("Arial", Font.BOLD, fontSize);
         g.setFont(font);
 
-        FontMetrics titleFontMetrics = g.getFontMetrics();
+        FontMetrics titleFontMetrics = g.getFontMetrics(font);
         int x = Game.getWindowWidth() /2 - titleFontMetrics.stringWidth(title) / 2;
 
-        g.drawString(title, x, Game.getWindowHeight() / 2 - 100);
+        g.drawString(title, x, Game.getWindowHeight() / 2 - 150);
     }
 
     private void drawPlayButton(Graphics g, String label) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.WHITE);
+        g.setColor(Color.WHITE);
 
         int buttonWidth = 100, buttonHeight = 50;
         playButton = new Rectangle(Game.getWindowWidth() /2 - buttonWidth /2, Game.getWindowHeight() /2 - buttonHeight /2, buttonWidth, buttonHeight);
-        g2d.fillRect(playButton.getX(), playButton.getY(), playButton.getWidth(), playButton.getHeight());
+        g.fillRect(playButton.getX(), playButton.getY(), playButton.getWidth(), playButton.getHeight());
 
         g.setColor(Color.BLACK);
         Font labelFont = new Font("Arial", Font.BOLD, 25);
         g.setFont(labelFont);
 
-        FontMetrics labelFontMetrics = g.getFontMetrics();
+        FontMetrics labelFontMetrics = g.getFontMetrics(labelFont);
         int labelX = playButton.getX() + (playButton.getWidth() /2 - labelFontMetrics.stringWidth(label) /2);
         int labelY = playButton.getY() + (playButton.getHeight() /2 - labelFontMetrics.getHeight() /2);
 

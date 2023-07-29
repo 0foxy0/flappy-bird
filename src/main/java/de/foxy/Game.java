@@ -53,7 +53,9 @@ public class Game extends JFrame implements MouseController {
 
         if (Taskbar.isTaskbarSupported()) {
             Taskbar taskbar = Taskbar.getTaskbar();
-            taskbar.setIconImage(image);
+            if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                taskbar.setIconImage(image);
+            }
         }
         setIconImage(image);
 
