@@ -79,10 +79,11 @@ public class GamePanel extends JPanel {
     }
 
     private void drawPlayButton(Graphics g, String label) {
+        int windowWidth = Game.getWindowWidth(), windowHeight = Game.getWindowHeight();
         g.setColor(Color.WHITE);
 
         int buttonWidth = 100, buttonHeight = 50;
-        playButton = new Rectangle(Game.getWindowWidth() /2 - buttonWidth /2, Game.getWindowHeight() /2 - buttonHeight /2, buttonWidth, buttonHeight);
+        playButton = new Rectangle((windowWidth - buttonWidth) /2, (windowHeight - buttonHeight) /2, buttonWidth, buttonHeight);
         g.fillRect(playButton.getX(), playButton.getY(), playButton.getWidth(), playButton.getHeight());
 
         g.setColor(Color.BLACK);
@@ -90,8 +91,8 @@ public class GamePanel extends JPanel {
         g.setFont(labelFont);
 
         FontMetrics labelFontMetrics = g.getFontMetrics(labelFont);
-        int labelX = playButton.getX() + (playButton.getWidth() /2 - labelFontMetrics.stringWidth(label) /2);
-        int labelY = playButton.getY() + (playButton.getHeight() /2 - labelFontMetrics.getHeight() /2);
+        int labelX = (windowWidth - labelFontMetrics.stringWidth(label)) /2;
+        int labelY = (windowHeight - labelFontMetrics.getHeight()) /2;
 
         g.drawString(label, labelX, labelY);
     }
